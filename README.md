@@ -21,10 +21,29 @@ With lazy.nvim:
   "2774326573/wpf-assistant.nvim",
   lazy = false,
   config = function()
-    require("wpf-assistant").setup()
+    require("wpf-assistant").setup({
+      designer = {
+        path = "D:/install/WpfDesigner/build-out/Demo.XamlDesigner.exe",
+      },
+    })
   end,
 }
 ```
+
+The default designer path is:
+
+```text
+D:\install\WpfDesigner\build-out\Demo.XamlDesigner.exe
+```
+
+Override it in a project `.nvim.lua` or in the plugin setup:
+
+```lua
+vim.g.wpf_designer_exe = "C:/Tools/MyXamlDesigner.exe"
+```
+
+The global variable takes precedence over the configured default. The existing
+`:XamlDesigner` command and `<leader>wx` use the selected executable.
 
 ## Keymaps
 

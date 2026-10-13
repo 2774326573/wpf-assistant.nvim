@@ -1,5 +1,22 @@
 local M = {}
 
+local defaults = {
+  designer = {
+    path = "D:/install/WpfDesigner/build-out/Demo.XamlDesigner.exe",
+  },
+}
+
+M._config = vim.deepcopy(defaults)
+
+local function configure_designer(config)
+  local custom = vim.g.wpf_designer_exe
+  if type(custom) == "string" and custom ~= "" then
+    vim.g.xaml_designer_exe = custom
+  elseif config.designer.path and config.designer.path ~= "" then
+    vim.g.xaml_designer_exe = config.designer.path
+  end
+end
+
 local function project_root()
   local file = vim.api.nvim_buf_get_name(0)
   local root = vim.fs.root(file ~= "" and file or 0, { "*.sln", "*.csproj" })
@@ -208,7 +225,14 @@ function M.show_menu()
   end)
 end
 
-function M.setup()
+function M.get_config()
+  return M._config
+end
+
+function M.setup(user_config)
+  M._config = vim.tbl_deep_extend("force", vim.deepcopy(defaults), user_config or {})
+  configure_designer(M._config)
+
   local commands = {
     WpfAssistant = M.show_menu,
     WpfBuild = function() M.build() end,
