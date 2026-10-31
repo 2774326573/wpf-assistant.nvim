@@ -55,6 +55,10 @@ local function send(session, file)
   end)
 end
 function M.start(mode, project, xaml)
+  if vim.fn.has('win32') ~= 1 then
+    vim.notify('WPF 設計器與執行時熱重載目前僅支援 Windows', vim.log.levels.WARN)
+    return
+  end
   project = project or require('wpf-assistant.core').startup_project()
   if not project then vim.notify('未找到啟動專案', vim.log.levels.ERROR); return end
   project = vim.fn.fnamemodify(project, ':p')
